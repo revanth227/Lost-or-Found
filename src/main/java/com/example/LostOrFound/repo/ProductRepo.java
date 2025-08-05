@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface LostOrFoundRepo extends JpaRepository<Product, Long> {
+public interface ProductRepo extends JpaRepository<Product, Long> {
 
     List<Product> findByproductName(String productName);
 

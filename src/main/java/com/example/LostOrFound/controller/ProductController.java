@@ -3,7 +3,7 @@ package com.example.LostOrFound.controller;
 import com.example.LostOrFound.dataEntity.Product;
 import com.example.LostOrFound.dto.ProductRequestDto;
 import com.example.LostOrFound.dto.ProductResponseDto;
-import com.example.LostOrFound.repo.LostOrFoundRepo;
+import com.example.LostOrFound.repo.ProductRepo;
 import com.example.LostOrFound.service.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -18,7 +18,7 @@ import java.util.List;
 @CrossOrigin
 public class ProductController {
     @Autowired
-    LostOrFoundRepo lostOrFoundRepo;
+    ProductRepo productRepo;
     @Autowired
     ProductService productService;
 
@@ -41,10 +41,6 @@ public class ProductController {
         return productService.addLOFPro(product);
     }
 
-    @PutMapping("/update")
-    public Product updatePro(@RequestBody Product product) {
-        return productService.updateProduct(product);
-    }
 
     @GetMapping("/filter")
     public List<Product> findAllByLocation(@RequestParam(name = "location", required = false) String location,
@@ -54,6 +50,35 @@ public class ProductController {
     ) {
 
         return productService.filterProduct(location, productName, status, date);
+    }
+
+    @GetMapping("/count/lost/{location}")
+    public int getCountByLocation(@PathVariable String location) {
+        List<Product> products = productRepo.findAll();
+        return productService.countLostProductsInLocation(products,
+                location);
+    }
+
+    @GetMapping("/seven")
+    public List<Product> getSevenDaysData() {
+        List<Product> allProducts = productRepo.findAll();
+        return productService.getBy7days(allProducts);
+    }
+
+    @GetMapping("/ses")
+    public String getSeess(HttpServletRequest request) {
+        return "This is the Session id " + request.getSession().getId();
+    }
+
+    @GetMapping("/csrf-token")
+    public CsrfToken getCsrf(HttpServletRequest servletRequest) {
+        return (CsrfToken) servletRequest.getAttribute("_csrf");
+
+    }
+
+    @PutMapping("/update")
+    public Product updatePro(@RequestBody Product product) {
+        return productService.updateProduct(product);
     }
 
 

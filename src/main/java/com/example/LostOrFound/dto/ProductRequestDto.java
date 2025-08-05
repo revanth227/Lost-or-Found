@@ -1,10 +1,13 @@
 package com.example.LostOrFound.dto;
 
-import com.example.LostOrFound.dataEntity.ProductType;
+import jakarta.validation.constraints.NotBlank;
 
 public class ProductRequestDto {
+    @NotBlank(message = "cannot be null")
     private String productName;
+    @NotBlank(message = "cannot be null")
     private String location;
+    @NotBlank(message = "cannot be null")
     private String status;
     private String description;
     private String reportByContact;

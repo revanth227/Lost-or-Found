@@ -4,7 +4,7 @@ import com.example.LostOrFound.dataEntity.Product;
 import com.example.LostOrFound.dto.ProductRequestDto;
 import com.example.LostOrFound.dto.ProductResponseDto;
 import com.example.LostOrFound.exception.ProductNotFoundException;
-import com.example.LostOrFound.repo.LostOrFoundRepo;
+import com.example.LostOrFound.repo.ProductRepo;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,19 +20,19 @@ import java.util.stream.Collectors;
 @Service
 public class ProductService {
     @Autowired
-    LostOrFoundRepo lostOrFoundRepo;
+    ProductRepo productRepo;
 
-    ProductService(LostOrFoundRepo lostOrFoundRepo) {
-        this.lostOrFoundRepo = lostOrFoundRepo;
+    ProductService(ProductRepo productRepo) {
+        this.productRepo = productRepo;
     }
 
     public List<Product> getEmAll() {
-        return lostOrFoundRepo.findAll();
+        return productRepo.findAll();
     }
 
     @Transactional
     public Product getProductById(Long id) {
-        return lostOrFoundRepo.findById(id)
+        return productRepo.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found with ID: " + id));
     }
 
@@ -49,7 +49,7 @@ public class ProductService {
         product1.setStatus(requestDto.getStatus());
         product1.setReportByContact(requestDto.getReportByContact());
         product1.setResolvedByContact(requestDto.getResolvedByContact());
-        lostOrFoundRepo.save(product1);
+        productRepo.save(product1);
 
 
         ProductResponseDto productResponseDto = new ProductResponseDto();
@@ -62,27 +62,25 @@ public class ProductService {
         productResponseDto.setResolvedByContact(product1.getResolvedByContact());
         productResponseDto.setDescription(product1.getDescription());
 
-
         return productResponseDto;
     }
 
 
     @Transactional
     public Product updateProduct(@RequestBody Product product) {
-        Optional<Product> product1 = lostOrFoundRepo.findById(product.getId());
+        Optional<Product> product1 = productRepo.findById(product.getId());
         if (product1.isEmpty()) {
-            throw new RuntimeException("No Product found to update")
-                    ;
+            throw new RuntimeException("No Product found to update");
         } else {
-            return lostOrFoundRepo.save(product);
+            return productRepo.save(product);
         }
     }
 
 
     public void deleteProductById(long id) throws RuntimeException {
-        Optional<Product> productOptional = lostOrFoundRepo.findById(id);
+        Optional<Product> productOptional = productRepo.findById(id);
         if (productOptional.isPresent()) {
-            lostOrFoundRepo.deleteById(id);
+            productRepo.deleteById(id);
         } else {
             throw new RuntimeException("No product found with the id " + id);
         }
@@ -91,12 +89,12 @@ public class ProductService {
 
     public long countProduct() {
 
-        return lostOrFoundRepo.count();
+        return productRepo.count();
     }
 
     public List<Product> getByReporterContact(String reportByContact) {
 
-        return lostOrFoundRepo.findByreportByContact(reportByContact);
+        return productRepo.findByreportByContact(reportByContact);
     }
 
     public int countLostProductsInLocation(List<Product> allProducts, String targetLocation) {
@@ -135,9 +133,9 @@ public class ProductService {
 
 
     public List<Product> filterProduct(String location, String productName, String status, LocalDateTime date) {
-        List<Product> products = lostOrFoundRepo.findAll();
+        List<Product> products = productRepo.findAll();
         if (location != null) {
-            return lostOrFoundRepo.findBylocation(location);
+            return productRepo.findBylocation(location);
         }
         if (productName != null) {
             products = products.stream().filter(p -> p.getProductName().equals(productName)).toList();
