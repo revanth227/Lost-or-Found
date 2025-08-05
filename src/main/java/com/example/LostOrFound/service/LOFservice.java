@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -90,19 +89,8 @@ public class LOFservice {
     }
 
 
-    public List<Product> getByLocation(String location) {
-        return lostOrFoundRepo.findBylocation(location);
-    }
-
-    public List<Product> getByProductName(String productName) {
-        return lostOrFoundRepo.findByproductName(productName);
-    }
-
-    public List<Product> getByStatus(String status) {
-        return lostOrFoundRepo.findByStatus(status);
-    }
-
     public long countProduct() {
+
         return lostOrFoundRepo.count();
     }
 
@@ -132,23 +120,35 @@ public class LOFservice {
         if (allProducts == null) {
             return null;
         }
-        List<Product> productList = new ArrayList<>();
-        LocalDateTime jack = LocalDateTime.now();
-        for (Product product : allProducts) {
-            if (product.getStatus() != null && product.getStatus().equalsIgnoreCase("lost")) {
-                if (product.getDateTime().isAfter(jack.minusDays(7))) {
-                    productList.add(product);
-                }
-            }
-        }
-        return productList;
+
+        return allProducts.stream()
+                .filter(product -> product.getStatus() != null && product.getStatus().equalsIgnoreCase("lost"))
+                .filter(product -> product.getDateTime().isAfter(LocalDateTime.now().minusDays(7)))
+                .toList();
     }
 
-    public List<Product> getByPlace(List<Product> allProds, String targetPlace){
+    public List<Product> getByPlace(List<Product> allProds, String targetPlace) {
         List<Product> products;
         products = allProds.stream().filter(pro -> pro.getLocation().toLowerCase().equals(targetPlace)).collect(Collectors.toList());
         return products;
     }
 
 
+    public List<Product> filterProduct(String location, String productName, String status, LocalDateTime date) {
+        List<Product> products = lostOrFoundRepo.findAll();
+        if (location != null) {
+            return lostOrFoundRepo.findBylocation(location);
+        }
+        if (productName != null) {
+            products = products.stream().filter(p -> p.getProductName().equals(productName)).toList();
+        }
+        if (status != null) {
+            products = products.stream().filter(s -> s.getStatus().equals(status)).toList();
+        }
+        if (date != null) {
+            products = products.stream().filter(d -> d.getDateTime().equals(date)).toList();
+
+        }
+        return products;
+    }
 }

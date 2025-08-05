@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -48,18 +50,11 @@ public class LOFController {
     @GetMapping("/filter")
     public List<Product> findAllByLocation(@RequestParam(name = "location", required = false) String location,
                                            @RequestParam(name = "name", required = false) String productName,
-                                           @RequestParam(name = "status", required = false) String status) {
-        List<Product> products = loFservice.getEmAll();
-        if (location != null) {
-            return loFservice.getByLocation(location);
-        }
-        if (productName != null) {
-            return loFservice.getByProductName(productName);
-        }
-        if (status != null) {
-            return loFservice.getByStatus(status);
-        }
-        return products;
+                                           @RequestParam(name = "status", required = false) String status,
+                                           @RequestParam(name = "date", required = false) LocalDateTime date
+    ) {
+
+        return loFservice.filterProduct(location, productName, status, date);
     }
 
 
