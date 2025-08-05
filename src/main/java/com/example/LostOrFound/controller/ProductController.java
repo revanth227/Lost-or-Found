@@ -63,33 +63,5 @@ public class ProductController {
         return "Item Removed successfully" + id;
     }
 
-    @GetMapping("/count/lost/{location}")
-    public int getCountByLocation(@PathVariable String location) {
-        List<Product> products = lostOrFoundRepo.findAll();
-        return productService.countLostProductsInLocation(products,
-                location);
-    }
-
-    @GetMapping("/seven")
-    public List<Product> getSevenDaysData() {
-        List<Product> allProducts = lostOrFoundRepo.findAll();
-        return productService.getBy7days(allProducts);
-    }
-
-    @GetMapping("/ses")
-    public String getSeess(HttpServletRequest request) {
-        return "This is the Session id " + request.getSession().getId();
-    }
-
-    @GetMapping("/csrf-token")
-    public CsrfToken getCsrf(HttpServletRequest servletRequest) {
-        return (CsrfToken) servletRequest.getAttribute("_csrf");
-
-    }
-
-    public List<Product> stringLoaction(String location) {
-        List<Product> allPods = lostOrFoundRepo.findAll();
-        return productService.getByPlace(allPods, location);
-    }
 
 }
