@@ -18,11 +18,11 @@ import java.util.stream.Collectors;
 
 
 @Service
-public class LOFservice {
+public class ProductService {
     @Autowired
     LostOrFoundRepo lostOrFoundRepo;
 
-    LOFservice(LostOrFoundRepo lostOrFoundRepo) {
+    ProductService(LostOrFoundRepo lostOrFoundRepo) {
         this.lostOrFoundRepo = lostOrFoundRepo;
     }
 

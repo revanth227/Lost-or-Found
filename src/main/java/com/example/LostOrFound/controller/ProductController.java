@@ -4,47 +4,46 @@ import com.example.LostOrFound.dataEntity.Product;
 import com.example.LostOrFound.dto.ProductRequestDto;
 import com.example.LostOrFound.dto.ProductResponseDto;
 import com.example.LostOrFound.repo.LostOrFoundRepo;
-import com.example.LostOrFound.service.LOFservice;
+import com.example.LostOrFound.service.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
 @CrossOrigin
-public class LOFController {
+public class ProductController {
     @Autowired
     LostOrFoundRepo lostOrFoundRepo;
     @Autowired
-    LOFservice loFservice;
+    ProductService productService;
 
-    public LOFController(LOFservice loFservice) {
-        this.loFservice = loFservice;
+    public ProductController(ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping("/all")
     public List<Product> getALl() {
-        return loFservice.getEmAll();
+        return productService.getEmAll();
     }
 
     @GetMapping("/id/{id}")
     public Product getByTheirId(@PathVariable Long id) {
-        return loFservice.getProductById(id);
+        return productService.getProductById(id);
     }
 
     @PostMapping("/add")
     public ProductResponseDto addProduct(@Valid @RequestBody ProductRequestDto product) {
-        return loFservice.addLOFPro(product);
+        return productService.addLOFPro(product);
     }
 
     @PutMapping("/update")
     public Product updatePro(@RequestBody Product product) {
-        return loFservice.updateProduct(product);
+        return productService.updateProduct(product);
     }
 
     @GetMapping("/filter")
@@ -54,27 +53,27 @@ public class LOFController {
                                            @RequestParam(name = "date", required = false) LocalDateTime date
     ) {
 
-        return loFservice.filterProduct(location, productName, status, date);
+        return productService.filterProduct(location, productName, status, date);
     }
 
 
     @DeleteMapping("/delete/{id}")
     public String removeById(@PathVariable long id) {
-        loFservice.deleteProductById(id);
+        productService.deleteProductById(id);
         return "Item Removed successfully" + id;
     }
 
     @GetMapping("/count/lost/{location}")
     public int getCountByLocation(@PathVariable String location) {
         List<Product> products = lostOrFoundRepo.findAll();
-        return loFservice.countLostProductsInLocation(products,
+        return productService.countLostProductsInLocation(products,
                 location);
     }
 
     @GetMapping("/seven")
     public List<Product> getSevenDaysData() {
         List<Product> allProducts = lostOrFoundRepo.findAll();
-        return loFservice.getBy7days(allProducts);
+        return productService.getBy7days(allProducts);
     }
 
     @GetMapping("/ses")
@@ -90,7 +89,7 @@ public class LOFController {
 
     public List<Product> stringLoaction(String location) {
         List<Product> allPods = lostOrFoundRepo.findAll();
-        return loFservice.getByPlace(allPods, location);
+        return productService.getByPlace(allPods, location);
     }
 
 }
