@@ -97,13 +97,15 @@ public class ProductService {
         return productRepo.findByreportByContact(reportByContact);
     }
 
-    public int countLostProductsInLocation(List<Product> allProducts, String targetLocation) {
+    public int countLostProductsInLocation( String targetLocation) {
+        List<Product> products = productRepo.findAll();
+
         int count = 0;
-        if (allProducts == null) {
+        if (products == null) {
             return 0;
         }
         String lowerCaseTargetLocation = targetLocation.toLowerCase();
-        for (Product product : allProducts) {
+        for (Product product : products) {
             if (product.getStatus() != null && product.getStatus().equalsIgnoreCase("lost")) {
                 if (product.getLocation() != null && product.getLocation().toLowerCase().equals(lowerCaseTargetLocation)) {
                     count++;
@@ -114,12 +116,14 @@ public class ProductService {
         return count;
     }
 
-    public List<Product> getBy7days(List<Product> allProducts) {
-        if (allProducts == null) {
+    public List<Product> getBy7days() {
+        List<Product> products = productRepo.findAll();
+
+        if (products == null) {
             return null;
         }
 
-        return allProducts.stream()
+        return products.stream()
                 .filter(product -> product.getStatus() != null && product.getStatus().equalsIgnoreCase("lost"))
                 .filter(product -> product.getDateTime().isAfter(LocalDateTime.now().minusDays(7)))
                 .toList();

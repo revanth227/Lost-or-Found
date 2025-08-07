@@ -1,10 +1,12 @@
 package com.example.LostOrFound.controller;
 
 import com.example.LostOrFound.dataEntity.Product;
+import com.example.LostOrFound.dataEntity.Users;
 import com.example.LostOrFound.dto.ProductRequestDto;
 import com.example.LostOrFound.dto.ProductResponseDto;
-import com.example.LostOrFound.repo.ProductRepo;
+import com.example.LostOrFound.repo.UserRepo;
 import com.example.LostOrFound.service.ProductService;
+import com.example.LostOrFound.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +19,11 @@ import java.util.List;
 @RestController
 @CrossOrigin
 public class ProductController {
-    @Autowired
-    ProductRepo productRepo;
+
     @Autowired
     ProductService productService;
+    @Autowired
+    UserService userService;
 
     public ProductController(ProductService productService) {
         this.productService = productService;
@@ -54,15 +57,12 @@ public class ProductController {
 
     @GetMapping("/count/lost/{location}")
     public int getCountByLocation(@PathVariable String location) {
-        List<Product> products = productRepo.findAll();
-        return productService.countLostProductsInLocation(products,
-                location);
+        return productService.countLostProductsInLocation(location);
     }
 
     @GetMapping("/seven")
     public List<Product> getSevenDaysData() {
-        List<Product> allProducts = productRepo.findAll();
-        return productService.getBy7days(allProducts);
+        return productService.getBy7days();
     }
 
     @GetMapping("/ses")
@@ -86,6 +86,11 @@ public class ProductController {
     public String removeById(@PathVariable long id) {
         productService.deleteProductById(id);
         return "Item Removed successfully" + id;
+    }
+
+    @PostMapping("/register")
+    public Users registerNewUser(@RequestBody Users user) {
+        return userService.saveNewUser(user);
     }
 
 

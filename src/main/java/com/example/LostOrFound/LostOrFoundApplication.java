@@ -11,3 +11,6 @@ public class LostOrFoundApplication {
     }
 
 }
+
+//spring.security.user.name=revanth
+//spring.security.user.password=ark
