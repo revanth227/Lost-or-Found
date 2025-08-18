@@ -1,10 +1,8 @@
 package com.example.LostOrFound.controller;
 
 import com.example.LostOrFound.dataEntity.Product;
-import com.example.LostOrFound.dataEntity.Users;
 import com.example.LostOrFound.dto.ProductRequestDto;
 import com.example.LostOrFound.dto.ProductResponseDto;
-import com.example.LostOrFound.repo.UserRepo;
 import com.example.LostOrFound.service.ProductService;
 import com.example.LostOrFound.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -86,11 +84,6 @@ public class ProductController {
     public String removeById(@PathVariable long id) {
         productService.deleteProductById(id);
         return "Item Removed successfully" + id;
-    }
-
-    @PostMapping("/register")
-    public Users registerNewUser(@RequestBody Users user) {
-        return userService.saveNewUser(user);
     }
 
 

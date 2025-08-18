@@ -15,14 +15,6 @@ public class Users {
     private String password;
     private String role;
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
     public long getId() {
         return id;
     }
@@ -35,8 +27,8 @@ public class Users {
         return username;
     }
 
-    public void setName(String name) {
-        this.username = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -47,8 +39,11 @@ public class Users {
         this.password = password;
     }
 
+    public String getRole() {
+        return role;
+    }
 
-
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//    }
+    public void setRole(String role) {
+        this.role = role;
+    }
 }
